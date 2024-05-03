@@ -1,0 +1,118 @@
+.btn {
+  @apply inline-flex items-center justify-center rounded-lg relative focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2;
+
+  &.btn-loadable {
+    .btn-loader {
+      @apply opacity-0 rounded-full border-2 absolute z-0 top-1/2 left-1/2 border-t-transparent border-white animate-spin transition-all duration-100;
+    }
+
+    .btn-main {
+      @apply opacity-100 relative z-10;
+    }
+
+    &.btn-loading {
+      .btn-loader {
+        @apply opacity-100;
+      }
+
+      .btn-main {
+        @apply opacity-0;
+      }
+    }
+  }
+
+  &.btn-sm {
+    @apply h-8 px-4 gap-1.5 text-sm;
+
+    .btn-loader {
+      @apply w-6 h-6 -ml-3 -mt-3;
+    }
+  }
+
+  &.btn-md {
+    @apply h-11 px-10 gap-2 text-sm rounded-lg;
+
+    .btn-loader {
+      @apply w-8 h-8 -ml-4 -mt-4;
+    }
+  }
+
+  &.btn-lg {
+    @apply h-14 px-8 gap-3 text-lg;
+
+    .btn-loader {
+      @apply w-10 h-10 -ml-5 -mt-5;
+    }
+  }
+
+  &.btn-xl {
+    @apply h-[70px] px-10 gap-2.5 text-base font-medium rounded-xl;
+
+    .btn-loader {
+      @apply w-12 h-12 -ml-6 -mt-6;
+    }
+  }
+
+  &.btn-primary {
+    @apply bg-primary text-white disabled:bg-primary hover:bg-primary/90 active:bg-primary/80 focus-visible:outline-primary !important;
+  }
+
+  &.btn-outline-primary {
+    @apply border border-primary text-primary disabled:bg-transparent disabled:text-primary hover:bg-primary hover:text-white active:bg-primary/10 focus-visible:outline-primary !important;
+  }
+
+  &.btn-secondary {
+    @apply bg-secondary text-white disabled:bg-secondary hover:bg-secondary/90 active:bg-secondary/80 focus-visible:outline-secondary !important;
+  }
+
+  &.btn-outline-secondary {
+    @apply border border-secondary text-secondary disabled:bg-transparent disabled:text-secondary hover:bg-secondary hover:text-white active:bg-secondary/10 focus-visible:outline-secondary !important;
+  }
+
+  &.btn-whatsapp {
+    @apply bg-whatsapp text-white disabled:bg-whatsapp hover:bg-whatsapp/90 active:bg-whatsapp/80 focus-visible:outline-whatsapp !important;
+  }
+
+  &.btn-telegram {
+    @apply bg-telegram text-white disabled:bg-telegram hover:bg-telegram/90 active:bg-telegram/80 focus-visible:outline-telegram !important;
+  }
+
+  &.btn-skype {
+    @apply bg-skype text-white disabled:bg-skype hover:bg-skype/90 active:bg-skype/80 focus-visible:outline-skype !important;
+  }
+
+  &.btn-like {
+    @apply bg-like text-white disabled:bg-like hover:bg-like/90 active:bg-like/80 focus-visible:outline-like !important;
+  }
+
+  &.btn-dislike {
+    @apply bg-dislike text-white disabled:bg-dislike hover:bg-dislike/90 active:bg-dislike/80 focus-visible:outline-dislike !important;
+  }
+
+  &.btn-secondary {
+    @apply bg-secondary text-white disabled:bg-secondary hover:bg-secondary/90 active:bg-secondary/80 focus-visible:outline-secondary !important;
+  }
+
+  &.btn-secondary {
+    @apply bg-secondary text-white disabled:bg-secondary hover:bg-secondary/90 active:bg-secondary/80 focus-visible:outline-secondary !important;
+  }
+  &.btn-white {
+    @apply bg-white border border-neutral-200 disabled:bg-white text-zinc-800 hover:bg-white/90 active:bg-white/80 focus-visible:outline-white !important;
+  }
+
+  &.btn-light {
+    @apply bg-gray-200 text-gray-500 disabled:bg-gray-200 hover:bg-gray-100 active:bg-gray-200 focus-visible:outline-gray-200 !important;
+  }
+
+  &.btn-slate {
+    @apply bg-slate-100 text-slate-600 hover:bg-slate-100/90 active:bg-slate-100/80 focus-visible:outline-slate-100 !important;
+  }
+
+  &.btn-link {
+    @apply text-primary disabled:text-primary hover:text-primary/90 active:text-primary/80 focus-visible:outline-primary !important;
+  }
+
+  &.btn-link-secondary {
+    @apply text-secondary disabled:text-secondary hover:text-secondary/90 active:text-secondary/80 focus-visible:outline-secondary !important;
+  }
+}

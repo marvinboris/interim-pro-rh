@@ -1,0 +1,85 @@
+@import url("https://fonts.googleapis.com/css2?family=Readex+Pro:wght@160..700&display=swap");
+@import url("https://cdn.jsdelivr.net/npm/@xz/fonts@1/serve/plus-jakarta-display.min.css");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer utilities {
+  .no-scrollbar {
+    &::-webkit-scrollbar {
+      display: none;
+    }
+
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  }
+}
+
+.App-modal {
+  @apply fixed inset-0 w-screen h-screen z-50 !m-0;
+
+  .App-dialog {
+    @apply absolute inset-0 overflow-y-auto no-scrollbar;
+
+    .App-body {
+      @apply flex relative min-h-full z-10 p-3 md:p-8 items-center justify-center;
+
+      .App-overlay {
+        @apply absolute inset-0 -z-10 backdrop-blur-[7px] bg-stone-50/25;
+      }
+    }
+  }
+}
+
+.Dropdown {
+  @apply relative text-left;
+
+  .Dropdown-content {
+    @apply absolute z-20 origin-top-right top-full right-0 mt-1 max-h-60 overflow-auto rounded-md bg-white py-2 shadow-lg ring-1 ring-black/5 focus:outline-none;
+
+    &.left {
+      @apply origin-top-left right-auto left-0;
+    }
+
+    .Dropdown-item {
+      @apply relative w-full flex items-center gap-1 lg:gap-2 cursor-pointer select-none py-1 lg:py-[7px] px-2 lg:px-4;
+    }
+  }
+}
+
+.FormInput {
+  @apply flex flex-col;
+
+  label {
+    @apply block text-zinc-800 font-medium text-xs md:text-sm;
+  }
+
+  .wrapper {
+    @apply h-10 md:h-12 rounded-lg relative bg-white border border-neutral-200 focus-within:border-2 focus-within:border-secondary flex items-center;
+
+    &.wrapper-auto {
+      @apply h-auto;
+    }
+
+    .addon {
+      @apply relative z-10 text-center flex items-center justify-center;
+    }
+
+    .content {
+      @apply flex-1 relative z-0 h-full;
+
+      .main {
+        @apply text-sm md:text-base h-full border-none bg-transparent outline-none focus:ring-0 text-inherit w-full placeholder:opacity-70 p-0;
+      }
+
+      .validation {
+        @apply absolute w-10 md:w-12 right-0 inset-y-0 flex items-center justify-center;
+      }
+    }
+
+    .append {
+      @apply pr-3 md:pr-4;
+    }
+  }
+}
