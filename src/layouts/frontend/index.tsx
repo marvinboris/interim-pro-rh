@@ -1,13 +1,13 @@
-import { ProfileCircle } from "iconsax-react";
+import Nav from "../ui/nav";
 import Footer from "./footer";
-import Nav from "./nav";
 import { LanguageSelector, Logo } from "@/components";
+import { ProfileCircle } from "iconsax-react";
 import { Link, Outlet } from "react-router-dom";
 
 export function LayoutFrontend() {
   return (
-    <div>
-      <header className="flex items-center h-[90px]">
+    <div className="min-h-screen flex flex-col">
+      <header className="flex items-center h-[90px] sticky top-0 bg-white/90 backdrop-blur z-50">
         <div className="container mx-auto flex items-center">
           <div className="mr-auto">
             <Link to="/">
@@ -36,7 +36,7 @@ export function LayoutFrontend() {
         </div>
       </header>
 
-      <main>
+      <main className="flex-1 flex flex-col">
         <Outlet />
       </main>
 

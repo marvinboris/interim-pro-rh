@@ -22,7 +22,8 @@ export default {
         like: '#00890E',
         dislike: '#FF4A3F',
         body: '#4A4A4A',
-        star: '#D89A00'
+        star: '#D89A00',
+        purple: "#8749D4"
       }
     },
   },

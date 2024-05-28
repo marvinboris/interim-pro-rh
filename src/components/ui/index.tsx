@@ -9,4 +9,5 @@ export * from "./logo";
 export * from "./rate";
 export * from "./scroll-to-top";
 export * from "./section";
+export * from "./table";
 export * from "./transition";

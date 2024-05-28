@@ -8,12 +8,9 @@ import {
 } from "iconsax-react";
 import React, { ReactNode } from "react";
 
-import { Validation } from "@types";
-import { checkValidity, cn, searchInObject } from "@/utils";
-
-import { ButtonAdd } from "../buttons";
+import { Validation } from "../../../@types";
+import { checkValidity, cn, searchInObject } from "../../../utils";
 import { Transition } from "../transition";
-
 import { Input } from "./input";
 
 type Option = {
@@ -24,34 +21,38 @@ type Option = {
 
 type CustomSelectProps = Omit<React.ComponentProps<"select">, "onChange"> & {
   label?: string;
+  placeholder?: string;
   addon?: ReactNode;
   append?: ReactNode;
   validation?: Validation;
   onChange?: ((value: string) => void) | ((value: string[]) => void);
-  options: Option[];
+  options?: Option[];
   sortByLabel?: boolean;
   searchable?: boolean;
-  dropdown?: boolean;
 };
 
 export function CustomSelect({
   label,
+  placeholder,
   addon,
   append,
   validation,
   options,
   sortByLabel,
   searchable,
-  dropdown,
   multiple,
   className,
   ...props
 }: CustomSelectProps) {
-  if (!multiple && !options.length) options = [{ value: "", label: "" }];
+  const defaultOption: Option = {
+    value: "",
+    label: placeholder || label || "",
+  };
+
+  if (!options) options = [];
 
   if (options.length > 100) {
     searchable = true;
-    dropdown = true;
     sortByLabel = true;
   }
 
@@ -59,20 +60,17 @@ export function CustomSelect({
   const [selected, setSelected] = React.useState(
     multiple
       ? (props.value as string[]) || []
-      : options.find((o) => o.value === props.value) || options[0]
+      : options.find((o) => o.value === props.value) || defaultOption
   );
-
   const [touched, setTouched] = React.useState(false);
 
   const filteredOptions = (
     multiple
-      ? options.filter((o) => !(selected as string[]).includes(o.value))
+      ? options.filter((o) => !(selected as string[])?.includes(o.value))
       : options
   )
-    .filter(
-      (_option, _index, options) => options.length <= 100 || search.length >= 3
-    )
-    .filter((option) => searchInObject(search, option));
+    .filter((option) => searchInObject(search, option))
+    .filter((_, index) => index < 100);
 
   const sortedOptions = sortByLabel
     ? filteredOptions.sort((a, b) => a.label.localeCompare(b.label))
@@ -86,7 +84,7 @@ export function CustomSelect({
     : true;
 
   const onChange = (option: Option) => {
-    const newOption = option || options[0];
+    const newOption = option || defaultOption;
     const newSelected = multiple
       ? (selected as string[]).concat(newOption.value)
       : newOption;
@@ -97,20 +95,21 @@ export function CustomSelect({
         ("value" in newSelected ? newSelected.value : newSelected) as string &
           string[]
       );
+    setSearch("");
   };
 
   React.useEffect(() => {
     setSelected(
       multiple
         ? (props.value as string[])
-        : options.find((o) => o.value === props.value) || options[0]
+        : options.find((o) => o.value === props.value) || defaultOption
     );
   }, [props.value]);
 
   const optionsBlock = (
     <Transition>
       <Listbox.Options
-        className={cn("Dropdown-content", { "w-full left": !multiple })}
+        className={cn("Dropdown-content w-full", { left: !multiple })}
       >
         {searchable ? (
           <div className="p-2 sticky -top-2 z-10 bg-white">
@@ -119,9 +118,7 @@ export function CustomSelect({
               type="search"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              label={`${"Search"}...${
-                options.length > 100 ? ` (${"at least 3 characters"})` : ""
-              }`}
+              label={`${"Search"}...`}
             />
           </div>
         ) : null}
@@ -130,7 +127,7 @@ export function CustomSelect({
             key={index}
             className={({ active }) =>
               `Dropdown-item ${
-                active ? "bg-primary/20 text-primary" : "text-zinc-800"
+                active ? "bg-secondary/20 text-secondary" : "text-zinc-800"
               }`
             }
             value={option}
@@ -139,7 +136,7 @@ export function CustomSelect({
               <div
                 className={cn(
                   "flex items-center",
-                  selected ? "font-semibold text-primary" : "font-normal"
+                  selected ? "font-semibold text-secondary" : "font-normal"
                 )}
               >
                 {option.icon ? (
@@ -148,7 +145,7 @@ export function CustomSelect({
                     className="size-4 md:size-5 mr-1.5 md:mr-2"
                   />
                 ) : null}
-                <span className="block truncate text-sm md:text-base">
+                <span className="block text-sm md:text-base">
                   {option.label}
                 </span>
               </div>
@@ -160,17 +157,24 @@ export function CustomSelect({
   );
 
   return (
-    <div className={className ? cn("FormInput", className) : "FormInput"}>
+    <div
+      className={cn(className ? cn("FormInput", className) : "FormInput", {
+        "flex-1 flex flex-col h-full": multiple,
+      })}
+    >
       {label && <label htmlFor={props.id || props.name}>{label}</label>}
       <Listbox
         as="div"
-        className={cn("Dropdown", className)}
+        disabled={props.disabled}
+        className={cn("Dropdown", className, {
+          "flex-1 flex flex-col": multiple,
+        })}
         value={selected}
         onChange={onChange}
       >
         {multiple ? (
           <>
-            {(selected as string[]).map((value, index) => (
+            {(selected as string[])?.map((value, index) => (
               <input
                 key={value + index}
                 type="hidden"
@@ -178,22 +182,22 @@ export function CustomSelect({
                 value={value}
               />
             ))}
-            <div className="rounded-lg bg-stone-50 p-2 flex items-start gap-3">
-              <div className="flex gap-2 flex-wrap flex-1">
-                {(selected as string[]).map((value, index) => {
+            <div className="rounded-lg flex flex-col flex-1 gap-3">
+              <div className="flex gap-2 flex-wrap flex-1 overflow-auto border border-neutral-200 rounded-lg bg-white p-2">
+                {(selected as string[])?.map((value, index) => {
                   const label = options.find((o) => o.value === value)?.label;
 
                   return (
                     <div
                       key={value + index}
-                      className="h-5 md:h-8 pl-2 md:pl-3 pr-1 py-1 bg-zinc-200 rounded-full justify-center items-center gap-2 inline-flex"
+                      className="h-5 md:h-8 pl-2 md:pl-3 pr-1 py-1 bg-white border border-zinc-800 rounded-full justify-center items-center gap-2 inline-flex"
                     >
                       <div className="text-zinc-800 text-base font-normal leading-tight">
                         {label}
                       </div>
                       <CloseCircle
                         variant="Bulk"
-                        className="size-5 text-primary"
+                        className="size-5 text-accent cursor-pointer"
                         onClick={() => {
                           const newSelected = (selected as string[]).filter(
                             (_, i) => i !== index
@@ -208,8 +212,12 @@ export function CustomSelect({
               </div>
 
               <div className="relative">
-                <Listbox.Button type="button" role="button">
-                  <ButtonAdd div size="sm" />
+                <Listbox.Button type="button" role="button" className="w-full">
+                  <Input
+                    readOnly
+                    placeholder={placeholder}
+                    className="!cursor-pointer"
+                  />
                 </Listbox.Button>
 
                 {optionsBlock}
@@ -244,24 +252,30 @@ export function CustomSelect({
                 >
                   <Listbox.Button role="button" className="main">
                     <div className="pr-3 md:pr-5">
-                      <span className="block truncate text-left">
+                      <span
+                        className={cn("block text-left", {
+                          italic: !(selected as Option)?.value,
+                        })}
+                      >
                         {(selected as Option)?.label}
                       </span>
-                      <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-1 md:pr-2">
-                        <ArrowDown2
-                          className="h-4 md:h-5 w-4 md:w-5 text-gray-400"
-                          aria-hidden="true"
-                        />
-                      </span>
+                      {props.disabled ? null : (
+                        <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-1 md:pr-2">
+                          <ArrowDown2
+                            className="size-4 md:size-5 text-gray-400"
+                            aria-hidden="true"
+                          />
+                        </span>
+                      )}
                     </div>
                   </Listbox.Button>
 
                   {touched && validation ? (
                     <div className="validation">
                       {valid ? (
-                        <TickCircle className="w-4 text-secondary" />
+                        <TickCircle className="size-4 text-secondary" />
                       ) : (
-                        <InfoCircle className="w-4 text-accent" />
+                        <InfoCircle className="size-4 text-accent" />
                       )}
                     </div>
                   ) : null}

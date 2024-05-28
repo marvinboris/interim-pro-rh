@@ -1,13 +1,49 @@
 import { Button, Logo } from "@/components";
+import { fetch } from "@/services";
+import { Subscriber } from "@types";
 import Facebook from "./icons/facebook";
 import Instagram from "./icons/instagram";
 import Whatsapp from "./icons/whatsapp";
-import { Call, Location, Message } from "iconsax-react";
 import FooterTitle from "./title";
+import { Call, Location, Message } from "iconsax-react";
 import { Link } from "react-router-dom";
 import { Send } from "react-iconly";
+import React, { FormEvent } from "react";
+import { v4 as uuidv4 } from "uuid";
 
 export default function Footer() {
+  const [loading, setLoading] = React.useState(false);
+
+  const onSubmit = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    const form = new FormData(e.currentTarget);
+
+    const email = form.get("email") as string;
+    if (!email) return;
+
+    const handle = async () => {
+      setLoading(true);
+
+      const subscriber = await fetch<Subscriber>({
+        resource: "subscriber",
+        method: "POST",
+        data: { id: uuidv4(), email },
+      });
+
+      if (subscriber) {
+        const email = e.currentTarget.querySelector(
+          "[name=email]"
+        ) as HTMLInputElement;
+        email.value = "";
+      }
+
+      setLoading(false);
+    };
+
+    handle();
+  };
+
   return (
     <footer className="bg-zinc-800 text-white divide-y divide-neutral-200">
       <div className="container mx-auto flex gap-10 pt-9 pb-14">
@@ -61,19 +97,30 @@ export default function Footer() {
 
           <div className="mt-5">
             <FooterTitle>Subscribe to newsletter</FooterTitle>
-            <div className="flex items-center p-2.5 gap-3.5 rounded-xl bg-white/20 mt-4">
+            <form
+              onSubmit={onSubmit}
+              className="flex items-center p-2.5 gap-3.5 rounded-xl bg-white/20 mt-4"
+            >
               <Message className="size-5 ml-1" />
 
               <input
+                name="email"
+                type="email"
                 placeholder="Your e-mail"
                 className="p-0 bg-transparent border-0 outline-none"
               />
 
-              <Button size="sm">
-                <span>Subscribe</span>
-                <Send size={24} />
+              <Button size="sm" type="submit" disabled={loading}>
+                {loading ? (
+                  <div className="size-6 animate-spin rounded-full border-2 border-white border-t-transparent" />
+                ) : (
+                  <>
+                    <span>Subscribe</span>
+                    <Send size={24} />
+                  </>
+                )}
               </Button>
-            </div>
+            </form>
           </div>
         </div>
         <div className="flex-1">

@@ -26,17 +26,21 @@ export function LanguageSelector({ white = false }) {
     >
       <Listbox.Button className="relative block cursor-default text-left">
         {language && (
-          <div className="flex items-center justify-end rounded-full pr-3 md:pr-4 cursor-pointer">
+          <div className="flex items-center justify-end gap-2 rounded-full cursor-pointer bg-neutral-100 py-2 px-3">
             <Flag
+              size="1x1"
               code={language.flag}
-              className="w-6 md:w-8 mr-2 image-cover"
+              className="w-6 image-cover rounded-full"
             />
 
-            <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center">
+            <div className="font-medium capitalize text-neutral-700">
+              {language.abbr}
+            </div>
+
+            <span className="pointer-events-none">
               <ArrowDown3
-                variant="Bold"
                 className={cn(
-                  "h-4 md:h-5 w-4 md:w-5",
+                  "size-4 md:size-5",
                   white ? "text-white" : "text-zinc-800"
                 )}
                 aria-hidden="true"
